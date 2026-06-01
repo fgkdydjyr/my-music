@@ -730,12 +730,6 @@ class LyricManager {
     if (this.isLyricDataEqual(musicStore.songLyric, lyricData)) {
       // 仅更新加载状态，不更新歌词数据
       statusStore.lyricLoading = false;
-      // 单曲循环时，歌词数据未变，需通知桌面歌词取消加载状态
-      if (isElectron) {
-        window.electron.ipcRenderer.send("desktop-lyric:update-data", {
-          lyricLoading: false,
-        });
-      }
       return;
     }
     // 设置歌词

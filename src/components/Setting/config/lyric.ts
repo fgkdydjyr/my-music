@@ -3,7 +3,7 @@ import { useSettingStore } from "@/stores";
 import type { SettingConfig } from "@/types/settings";
 import { isElectron, isMac } from "@/utils/env";
 import { descMultiline } from "@/utils/format";
-import { openAMLLServer, openExcludeLyric, openFontManager } from "@/utils/modal";
+import { openAMLLServer, openExcludeLyric } from "@/utils/modal";
 import LyricPreview from "../components/LyricPreview.vue";
 
 export const useLyricSettings = (): SettingConfig => {
@@ -103,15 +103,7 @@ export const useLyricSettings = (): SettingConfig => {
             },
             defaultValue: 18,
           },
-          {
-            key: "fontConfig",
-            label: "歌词字体设置",
-            type: "button",
-            description: "统一配置各语种歌词区域的字体",
-            buttonLabel: "配置",
-            action: openFontManager,
-          },
-          {
+        {
             key: "lyricFontWeight",
             label: "歌词字重设置",
             type: "input-number",

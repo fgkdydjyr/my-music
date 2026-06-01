@@ -1,7 +1,6 @@
 import { useSettingStore, useStatusStore } from "@/stores";
 import { isElectron } from "@/utils/env";
 import {
-  openFontManager,
   openCustomCode,
   openThemeConfig,
   openSidebarHideManager,
@@ -86,14 +85,6 @@ export const useAppearanceSettings = (): SettingConfig => {
                 handleBorderlessChange(v);
               },
             }),
-          },
-          {
-            key: "fontConfig",
-            label: "全局字体",
-            type: "button",
-            description: "统一配置全局及歌词区域的字体",
-            buttonLabel: "配置",
-            action: openFontManager,
           },
           {
             key: "customCode",

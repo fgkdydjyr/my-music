@@ -49,7 +49,7 @@ const config: Configuration = {
     // Windows 平台全局文件名模板
     artifactName: "${productName}-${version}-${arch}.${ext}",
     // 是否对可执行文件进行签名和编辑
-    // signAndEditExecutable: false,
+    signAndEditExecutable: false,
     // 构建类型（架构由命令行参数 --x64 或 --arm64 指定）
     target: [
       // 安装版

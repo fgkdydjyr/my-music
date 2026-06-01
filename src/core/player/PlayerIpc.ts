@@ -167,3 +167,9 @@ export const updateDiscordConfig = (config: DiscordConfigPayload) => {
     displayMode: displayMode,
   });
 };
+
+export const sendMacStatusBarProgress = (data: {
+  currentTime: number;
+  duration: number;
+  offset: number;
+}) => sendIpc("mac-statusbar:progress", data);

@@ -568,20 +568,6 @@ export const openAMLLServer = async () => {
   });
 };
 
-/** 打开字体管理弹窗 */
-export const openFontManager = async () => {
-  const { default: FontManager } = await import("@/components/Modal/Setting/FontManager.vue");
-  window.$modal.create({
-    preset: "card",
-    transformOrigin: "center",
-    autoFocus: false,
-    style: { width: "700px" },
-    title: "字体设置",
-    content: () => {
-      return h(FontManager);
-    },
-  });
-};
 
 /** 打开自定义代码弹窗 */
 export const openCustomCode = async () => {

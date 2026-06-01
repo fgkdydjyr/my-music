@@ -5,6 +5,9 @@ import { handleProtocolUrl } from "@/utils/protocol";
 import { isElectron } from "./env";
 import { getPlayerInfoObj } from "./format";
 import { openSetting, openUpdateApp } from "./modal";
+import { toRaw } from "vue";
+import { cloneDeep } from "lodash-es";
+import { toLikeSong } from "./auth";
 
 // 关闭更新状态
 const closeUpdateStatus = () => {
