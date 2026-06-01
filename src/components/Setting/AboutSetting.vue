@@ -231,7 +231,7 @@ const allContributors = ref<DeveloperType[]>([]);
 const getContributors = async () => {
   try {
     const response = await fetch(
-      "https://gitee.com/api/v5/repos/linyongbin01/my-music/contributors",
+      "https://api.github.com/repos/fgkdydjyr/my-music/contributors?per_page=100",
     );
     const data = await response.json();
     if (Array.isArray(data)) {
