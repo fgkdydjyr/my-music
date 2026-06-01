@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { MpvService } from "../services/MpvService";
 import { useStore } from "../store";
 import { isDev } from "../utils/config";
-import { initThumbar } from "../thumbar";
+
 import { processProtocolFromCommand } from "../utils/protocol";
 import mainWindow from "../windows/main-window";
 import loadWindow from "../windows/load-window";
@@ -54,10 +54,8 @@ const initWindowsIpc = (): void => {
       }, 100);
       isFirstLaunch = true;
     }
-    // 初始化缩略图工具栏
+    // 检查是否有自定义协议启动（仅执行一次）
     if (mainWin) {
-      initThumbar(mainWin);
-      // 检查是否有自定义协议启动（仅执行一次）
       if (!isProtocolProcessed) {
         processProtocolFromCommand(process.argv);
         isProtocolProcessed = true;
