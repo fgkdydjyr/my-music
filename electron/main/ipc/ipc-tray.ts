@@ -1,6 +1,7 @@
 import type { PlayModePayload } from "@shared";
 import { ipcMain } from "electron";
 import { getMainTray } from "../tray";
+import { useStore } from "../store";
 import { appName, isMac } from "../utils/config";
 
 // 当前歌曲标题
