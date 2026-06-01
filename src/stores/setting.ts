@@ -42,10 +42,7 @@ export interface SettingState {
   showCloseAppTip: boolean;
   /** 关闭应用方式 */
   closeAppMethod: "exit" | "hide";
-  /** 显示任务栏进度 */
-  showTaskbarProgress: boolean;
-  /** 任务栏歌词跟随主题色 */
-  taskbarLyricUseThemeColor: boolean;
+
   /** 是否使用在线服务 */
   useOnlineService: boolean;
   /** 分享链接格式 */
@@ -379,7 +376,6 @@ export interface SettingState {
     addToPlaylist: boolean;
     download: boolean;
     comments: boolean;
-    desktopLyric: boolean;
     moreSettings: boolean;
     copyLyric: boolean;
     lyricOffset: boolean;
@@ -510,8 +506,7 @@ export const useSettingStore = defineStore("setting", {
     shareUrlFormat: "web",
     showCloseAppTip: true,
     closeAppMethod: "hide",
-    showTaskbarProgress: false,
-    taskbarLyricUseThemeColor: false,
+
     checkUpdateOnStart: true,
     preventSleep: false,
     useKeepAlive: true,
@@ -677,7 +672,6 @@ export const useSettingStore = defineStore("setting", {
       addToPlaylist: true,
       download: true,
       comments: true,
-      desktopLyric: true,
       moreSettings: true,
       copyLyric: true,
       lyricOffset: true,

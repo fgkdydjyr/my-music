@@ -208,22 +208,9 @@ class PlayerController {
     statusStore.abLoop.enable = false;
     statusStore.abLoop.pointA = null;
     statusStore.abLoop.pointB = null;
-    // 通知桌面歌词
+    // 主动通知播放状态
     if (isElectron) {
-      window.electron.ipcRenderer.send("desktop-lyric:update-data", {
-        lyricLoading: true,
-      });
-    }
-    // 更新任务栏歌词窗口的元数据
-    const { name, artist, album } = getPlayerInfoObj(song) || {};
-    const coverUrl = song.coverSize?.s || song.cover || "";
-    playerIpc.sendTaskbarMetadata({
-      title: name || "",
-      artist: artist || "",
-      cover: coverUrl,
-    });
-    // 主动通知桌面歌词和 macOS 状态栏歌词 确保 AutoMix 平滑过渡时也触发更新
-    if (isElectron) {
+      const { name, artist, album } = getPlayerInfoObj(song) || {};
       const playTitle = `${name} - ${artist}`;
       playerIpc.sendSongChange(playTitle, name || "", artist || "", album || "");
       if (isMac) {
@@ -523,20 +510,13 @@ class PlayerController {
       }
 
       // 更新进度到状态
-      const duration = !crossfadeOptions || !shouldDeferStateSync ? updateSeekState() : 0;
+      if (!crossfadeOptions || !shouldDeferStateSync) updateSeekState();
 
-      // 如果不自动播放，设置任务栏暂停状态
+      // 如果不自动播放，设置暂停状态
       if (!autoPlay) {
         // 立即将 UI 置为暂停，防止事件竞态导致短暂显示为播放
         statusStore.playStatus = false;
         playerIpc.sendPlayStatus(false);
-        playerIpc.sendTaskbarState({ isPlaying: false });
-        playerIpc.sendTaskbarMode("paused");
-        if (seek > 0) {
-          const safeDuration = duration || this.getDuration() || statusStore.duration;
-          const progress = calculateProgress(seek, safeDuration);
-          playerIpc.sendTaskbarProgress(progress);
-        }
       }
     } catch (error) {
       console.error("❌ 音频播放失败:", error);
@@ -633,13 +613,6 @@ class PlayerController {
       getCoverColor(musicStore.playSong.cover);
       // 更新媒体会话
       mediaSessionManager.updateMetadata();
-      // 更新任务栏歌词
-      const { name, artist } = getPlayerInfoObj() || {};
-      playerIpc.sendTaskbarMetadata({
-        title: name || "",
-        artist: artist || "",
-        cover: musicStore.playSong.cover || "",
-      });
     } catch (error) {
       console.error("❌ 解析本地歌曲元信息失败:", error);
     }
@@ -690,7 +663,7 @@ class PlayerController {
       statusStore.playStatus = true;
       playerIpc.sendMediaPlayState("Playing");
       mediaSessionManager.updatePlaybackStatus(true);
-      window.document.title = `${playTitle} | SPlayer`;
+      window.document.title = `${playTitle} | 知音`;
       // 只有真正播放了才重置重试计数
       if (this.retryInfo.count > 0) this.retryInfo.count = 0;
       // 注意：failSkipCount 的重置移至 onTimeUpdate，确保有实际进度
@@ -698,9 +671,6 @@ class PlayerController {
       lastfmScrobbler.resume();
       // IPC 通知
       playerIpc.sendPlayStatus(true);
-      playerIpc.sendTaskbarState({ isPlaying: true });
-      playerIpc.sendTaskbarMode("normal");
-      playerIpc.sendTaskbarProgress(statusStore.progress);
       console.log(`▶️ [${musicStore.playSong?.id}] 歌曲播放:`, name);
     });
     // 暂停
@@ -709,11 +679,8 @@ class PlayerController {
       useAutomixManager().resetAutomixScheduling("IDLE");
       playerIpc.sendMediaPlayState("Paused");
       mediaSessionManager.updatePlaybackStatus(false);
-      if (!isElectron) window.document.title = "SPlayer";
+      if (!isElectron) window.document.title = "知音";
       playerIpc.sendPlayStatus(false);
-      playerIpc.sendTaskbarState({ isPlaying: false });
-      playerIpc.sendTaskbarMode("paused");
-      playerIpc.sendTaskbarProgress(statusStore.progress);
       lastfmScrobbler.pause();
       console.log(`⏸️ [${musicStore.playSong?.id}] 歌曲暂停`);
     });
@@ -769,32 +736,6 @@ class PlayerController {
       }
       // 更新系统 MediaSession
       mediaSessionManager.updateState(duration, currentTime);
-      // 更新桌面歌词
-      playerIpc.sendLyric({
-        currentTime,
-        songId: musicStore.playSong?.id,
-        songOffset: statusStore.getSongOffset(musicStore.playSong?.id),
-      });
-      // 任务栏进度
-      if (settingStore.showTaskbarProgress) {
-        playerIpc.sendTaskbarProgress(statusStore.progress);
-      } else {
-        playerIpc.sendTaskbarProgress("none");
-      }
-      // 任务栏歌词进度
-      playerIpc.sendTaskbarProgressData({
-        currentTime,
-        duration,
-        offset,
-      });
-      // macOS 状态栏歌词进度
-      if (isMac) {
-        playerIpc.sendMacStatusBarProgress({
-          currentTime,
-          duration,
-          offset,
-        });
-      }
       // Socket 进度
       playerIpc.sendSocketProgress(currentTime, duration);
     }, 200);
@@ -1228,7 +1169,6 @@ class PlayerController {
     // 清空播放列表
     await dataStore.setPlayList([]);
     await dataStore.clearOriginalPlayList();
-    playerIpc.sendTaskbarProgress("none");
   }
 
   /**
@@ -1512,44 +1452,6 @@ class PlayerController {
   public disableEq() {
     const audioManager = useAudioManager();
     for (let i = 0; i < 10; i++) audioManager.setFilterGain(i, 0);
-  }
-
-  /**
-   * 切换桌面歌词
-   */
-  public toggleDesktopLyric() {
-    const statusStore = useStatusStore();
-    this.setDesktopLyricShow(!statusStore.showDesktopLyric);
-  }
-
-  /**
-   * 桌面歌词控制
-   * @param show 是否显示
-   */
-  public setDesktopLyricShow(show: boolean) {
-    const statusStore = useStatusStore();
-    if (statusStore.showDesktopLyric === show) return;
-    statusStore.showDesktopLyric = show;
-    playerIpc.toggleDesktopLyric(show);
-    window.$message.success(`${show ? "已开启" : "已关闭"}桌面歌词`);
-  }
-
-  /** 切换任务栏歌词 */
-  public toggleTaskbarLyric() {
-    const statusStore = useStatusStore();
-    this.setTaskbarLyricShow(!statusStore.showTaskbarLyric);
-  }
-
-  /**
-   * 设置任务栏歌词显示
-   * @param show 是否显示
-   */
-  public setTaskbarLyricShow(show: boolean) {
-    const statusStore = useStatusStore();
-    if (statusStore.showTaskbarLyric === show) return;
-    statusStore.showTaskbarLyric = show;
-    playerIpc.setTaskbarLyricShow(show);
-    window.$message.success(`${show ? "已开启" : "已关闭"}任务栏歌词`);
   }
 
   /**

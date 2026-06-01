@@ -20,7 +20,7 @@ import { parseLrc } from "@/utils/lyric/parseLrc";
 import { getConverter } from "@/utils/opencc";
 import { type LyricLine, parseTTML, parseYrc } from "@applemusic-like-lyrics/lyric";
 import { cloneDeep, isEmpty } from "lodash-es";
-import { attachTtmlBgLines, cleanTTMLTranslations } from "@/utils/lyric/parseTTML";
+import { cleanTTMLTranslations } from "@/utils/lyric/parseTTML";
 
 interface LyricFetchResult {
   data: SongLyric;
@@ -902,14 +902,6 @@ class LyricManager {
     return null;
   }
 
-  /**
-   * 为任务栏歌词处理 TTML（注入 BG）
-   * @param lines 原始解析后的歌词行
-   * @param ttml 原始 TTML 文本
-   */
-  public processTtmlForTaskbar(lines: LyricLine[], ttml: string): LyricLine[] {
-    return attachTtmlBgLines(ttml, cloneDeep(lines));
-  }
 }
 
 let instance: LyricManager | null = null;

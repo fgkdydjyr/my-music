@@ -256,7 +256,7 @@ export const getUpdateLog = async (): Promise<UpdateLogType[]> => {
     result.map(async (v: any) => ({
       version: v.tag_name,
       changelog: await marked(v.body),
-      time: convertToLocalTime(v.published_at),
+      time: convertToLocalTime(v.created_at),
       url: v.html_url,
       prerelease: v.prerelease,
     })),

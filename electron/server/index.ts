@@ -31,8 +31,8 @@ const initAppServer = async () => {
     // 声明
     server.get("/api", (_, reply) => {
       reply.send({
-        name: "SPlayer API",
-        description: "SPlayer API service",
+        name: "知音 API",
+        description: "知音 API 服务",
         author: "@imsyy",
         list: [
           {

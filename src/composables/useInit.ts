@@ -2,16 +2,12 @@ import { mediaSessionManager } from "@/core/player/MediaSessionManager";
 import { usePlayerController } from "@/core/player/PlayerController";
 import { useDownloadManager } from "@/core/resource/DownloadManager";
 import { useDataStore, useSettingStore, useShortcutStore, useStatusStore } from "@/stores";
-import { TASKBAR_IPC_CHANNELS } from "@/types/shared";
 import { isElectron, isMac } from "@/utils/env";
 import { printVersion } from "@/utils/log";
 import { openUserAgreement } from "@/utils/modal";
 import { useEventListener } from "@vueuse/core";
 import { debounce } from "lodash-es";
 import { onMounted, watch } from "vue";
-
-/** 最终聚焦主窗口的延迟时间（毫秒） */
-const FINAL_FOCUS_DELAY_MS = 500;
 
 /**
  * 应用初始化时需要执行的操作
@@ -76,29 +72,11 @@ export const useInit = () => {
       downloadManager.init();
       // 显示窗口
       window.electron.ipcRenderer.send("win-loaded");
-      // 同步任务栏歌词状态
-      const taskbarConfig = await window.electron.ipcRenderer.invoke(
-        TASKBAR_IPC_CHANNELS.GET_OPTION,
-      );
-      statusStore.showTaskbarLyric = taskbarConfig?.enabled ?? statusStore.showTaskbarLyric ?? false;
-      window.electron.ipcRenderer.send(
-        TASKBAR_IPC_CHANNELS.SET_OPTION,
-        { enabled: statusStore.showTaskbarLyric },
-        true,
-      );
-      // 显示桌面歌词
-      window.electron.ipcRenderer.send("desktop-lyric:toggle", statusStore.showDesktopLyric);
       // 检查更新
       if (settingStore.checkUpdateOnStart) window.electron.ipcRenderer.send("check-update", false);
       // 如果启用macOS歌词，发送初始数据
       if (isMac && settingStore.macos.statusBarLyric.enabled) {
-        window.electron.ipcRenderer.send(TASKBAR_IPC_CHANNELS.REQUEST_DATA);
-      }
-      // 确保主窗口在最后获得焦点
-      if (statusStore.showDesktopLyric) {
-        setTimeout(() => {
-          window.electron.ipcRenderer.send("win-show-main");
-        }, FINAL_FOCUS_DELAY_MS);
+        window.electron.ipcRenderer.send("mac-statusbar:request-data");
       }
     }
   });
@@ -172,9 +150,6 @@ const keyDownEvent = debounce((event: KeyboardEvent) => {
           break;
         case "volumeDown":
           player.setVolume("down");
-          break;
-        case "toggle-desktop-lyric":
-          player.toggleDesktopLyric();
           break;
         case "openPlayer":
           // 打开播放界面（任意界面）

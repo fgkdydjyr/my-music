@@ -4,8 +4,8 @@
       <n-h3 prefix="bar"> 关于软件 </n-h3>
       <n-card class="set-item">
         <n-flex align="center" class="about">
-          <SvgIcon name="SPlayer" size="26" />
-          <n-text class="logo-name">SPlayer</n-text>
+          <SvgIcon name="ZhiYin" size="26" />
+          <n-text class="logo-name">知音</n-text>
           <n-tag v-if="statusStore.isDeveloperMode" size="small" type="warning" round> DEV </n-tag>
           <n-tag size="small" type="primary" round @click="openDeveloperMode">
             {{ packageJson.version }}
@@ -231,7 +231,7 @@ const allContributors = ref<DeveloperType[]>([]);
 const getContributors = async () => {
   try {
     const response = await fetch(
-      "https://api.github.com/repos/imsyy/SPlayer/contributors?per_page=100&anon=true",
+      "https://gitee.com/api/v5/repos/linyongbin01/my-music/contributors",
     );
     const data = await response.json();
     if (Array.isArray(data)) {

@@ -11,9 +11,7 @@ import {
 } from "electron";
 import { join } from "path";
 import { trayLog } from "../logger";
-import { useStore } from "../store";
 import { appName, isMac, isWin } from "../utils/config";
-import lyricWindow from "../windows/lyric-window";
 
 // 播放模式
 type PlayState = "play" | "pause" | "loading";
@@ -25,9 +23,6 @@ let shuffleMode: ShuffleModeType = "off";
 let playState: PlayState = "pause";
 let playName: string = "未播放歌曲";
 let likeSong: boolean = false;
-let desktopLyricShow: boolean = false;
-let desktopLyricLock: boolean = false;
-let taskbarLyricShow: boolean = false;
 
 export interface MainTray {
   setTitle(title: string): void;
@@ -35,9 +30,6 @@ export interface MainTray {
   setLikeState(like: boolean): void;
   setPlayState(state: PlayState): void;
   setPlayName(name: string): void;
-  setDesktopLyricShow(show: boolean): void;
-  setDesktopLyricLock(lock: boolean): void;
-  setTaskbarLyricShow(show: boolean): void;
   initTrayMenu(): void;
   destroyTray(): void;
 }
@@ -104,7 +96,6 @@ const getMenuIcon = (iconName: string): NativeImage | undefined => {
 
 // 托盘菜单
 const createTrayMenu = (win: BrowserWindow): MenuItemConstructorOptions[] => {
-  const store = useStore();
   /**
    * 获取 {@linkcode RepeatModeType} 对应的显示字符串
    * @param mode 重复模式
@@ -121,8 +112,6 @@ const createTrayMenu = (win: BrowserWindow): MenuItemConstructorOptions[] => {
         return "列表循环";
     }
   };
-
-  const isMacosLyricEnabled = store.get("macos.statusBarLyric.enabled") ?? false;
 
   // 菜单
   const menu: MenuItemConstructorOptions[] = [
@@ -200,36 +189,6 @@ const createTrayMenu = (win: BrowserWindow): MenuItemConstructorOptions[] => {
       label: "下一曲",
       icon: getMenuIcon("next"),
       click: () => win.webContents.send("playNext"),
-    },
-    {
-      type: "separator",
-    },
-    {
-      id: "toggle-desktop-lyric",
-      label: `${desktopLyricShow ? "关闭" : "开启"}桌面歌词`,
-      icon: getMenuIcon("lyric"),
-      click: () => win.webContents.send("desktop-lyric:toggle"),
-    },
-    {
-      id: "toggle-desktop-lyric-lock",
-      label: `${desktopLyricLock ? "解锁" : "锁定"}桌面歌词`,
-      icon: getMenuIcon(desktopLyricLock ? "lock" : "unlock"),
-      visible: desktopLyricShow,
-      click: () => {
-        const store = useStore();
-        store.set("lyric.config", { ...store.get("lyric.config"), isLock: !desktopLyricLock });
-        const config = store.get("lyric.config");
-        const lyricWin = lyricWindow.getWin();
-        if (!lyricWin) return;
-        lyricWin.webContents.send("desktop-lyric:update-option", config);
-      },
-    },
-    {
-      id: "toggle-taskbar-lyric",
-      label: `${(isMac ? isMacosLyricEnabled : taskbarLyricShow) ? "关闭" : "开启"}${isMac ? "状态栏" : "任务栏"}歌词`,
-      icon: getMenuIcon("lyric"),
-      visible: isWin || isMac,
-      click: () => win.webContents.send("toggle-taskbar-lyric"),
     },
     {
       type: "separator",
@@ -361,31 +320,6 @@ class CreateTray implements MainTray {
     // 更新菜单
     this.initTrayMenu();
   }
-  /**
-   * 桌面歌词开关
-   * @param show 桌面歌词开关状态
-   */
-  setDesktopLyricShow(show: boolean) {
-    desktopLyricShow = show;
-    // 更新菜单
-    this.initTrayMenu();
-  }
-  /**
-   * 锁定桌面歌词
-   * @param lock 锁定桌面歌词状态
-   */
-  setDesktopLyricLock(lock: boolean) {
-    desktopLyricLock = lock;
-    // 更新菜单
-    this.initTrayMenu();
-  }
-
-  setTaskbarLyricShow(show: boolean) {
-    taskbarLyricShow = show;
-    // 更新菜单
-    this.initTrayMenu();
-  }
-
   /**
    * 销毁托盘
    */

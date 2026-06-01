@@ -33,7 +33,7 @@ export const initUnblockAPI = async (fastify: FastifyInstance) => {
   fastify.get("/unblock", (_, reply) => {
     reply.send({
       name: "UnblockAPI",
-      description: "SPlayer UnblockAPI service",
+      description: "知音 UnblockAPI 服务",
       author: "@imsyy",
       content:
         "部分接口采用 @939163156 by GD音乐台(music.gdstudio.xyz)，仅供本人学习使用，不可传播下载内容，不可用于商业用途。",

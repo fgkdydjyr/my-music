@@ -63,7 +63,7 @@
             <template #header>
               <n-flex align="center" justify="center" class="aside-logo">
                 <Logo />
-                <n-text>SPlayer</n-text>
+                <n-text>知音</n-text>
               </n-flex>
             </template>
             <Menu @menu-click="showAside = false" />

@@ -1,7 +1,6 @@
 import { isMac } from "../utils/config";
 import initCacheIpc from "./ipc-cache";
 import initFileIpc from "./ipc-file";
-import initLyricIpc from "./ipc-lyric";
 import { initMacStatusBarIpc } from "./ipc-mac-statusbar";
 import initMediaIpc from "./ipc-media";
 import initMpvIpc from "./ipc-mpv";
@@ -11,8 +10,6 @@ import initShortcutIpc from "./ipc-shortcut";
 import initSocketIpc from "./ipc-socket";
 import initStoreIpc from "./ipc-store";
 import initSystemIpc from "./ipc-system";
-import initTaskbarIpc from "./ipc-taskbar";
-import initThumbarIpc from "./ipc-thumbar";
 import initTrayIpc from "./ipc-tray";
 import initUpdateIpc from "./ipc-update";
 import initWindowsIpc from "./ipc-window";
@@ -27,9 +24,7 @@ const initIpc = (): void => {
   initUpdateIpc();
   initFileIpc();
   initTrayIpc();
-  initLyricIpc();
   initStoreIpc();
-  initThumbarIpc();
   initShortcutIpc();
   initProtocolIpc();
   initCacheIpc();
@@ -39,8 +34,6 @@ const initIpc = (): void => {
   initRendererLogIpc();
   if (isMac) {
     initMacStatusBarIpc();
-  } else {
-    initTaskbarIpc();
   }
 };
 

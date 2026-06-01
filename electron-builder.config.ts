@@ -4,7 +4,7 @@ const config: Configuration = {
   // 应用程序的唯一标识符
   appId: "com.imsyy.splayer",
   // 应用程序的产品名称
-  productName: "SPlayer",
+  productName: "知音",
   copyright: "Copyright © imsyy 2023",
   // 构建资源所在的目录
   directories: {

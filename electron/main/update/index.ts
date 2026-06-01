@@ -7,11 +7,10 @@ import { useStore } from "../store";
 // import
 const { autoUpdater } = electronUpdater;
 
-// 更新源
+// 更新源（Gitee Generic 模式，需在 Release 上传更新文件 + latest.yml）
 autoUpdater.setFeedURL({
-  provider: "github",
-  owner: "imsyy",
-  repo: "SPlayer",
+  provider: "generic",
+  url: "https://gitee.com/linyongbin01/my-music/releases/download",
 });
 
 // 禁用自动下载

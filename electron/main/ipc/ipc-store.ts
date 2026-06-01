@@ -55,7 +55,7 @@ const initStoreIpc = (): void => {
       const { filePath } = await dialog.showSaveDialog({
         title: "导出设置",
         defaultPath: filename,
-        filters: [{ name: "SPlayer Config", extensions: ["json"] }],
+        filters: [{ name: "知音 配置", extensions: ["json"] }],
       });
 
       if (filePath) {
@@ -88,7 +88,7 @@ const initStoreIpc = (): void => {
     try {
       const { filePaths } = await dialog.showOpenDialog({
         title: "导入设置",
-        filters: [{ name: "SPlayer Config", extensions: ["json"] }],
+        filters: [{ name: "知音 配置", extensions: ["json"] }],
         properties: ["openFile"],
       });
 

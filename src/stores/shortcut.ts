@@ -9,7 +9,7 @@ type ShortcutType = {
   isRegistered?: boolean;
 };
 
-interface ShortcutStore {
+  interface ShortcutStore {
   globalOpen: boolean;
   shortcutList: {
     playOrPause: ShortcutType;
@@ -19,7 +19,6 @@ interface ShortcutStore {
     seekBackward: ShortcutType;
     volumeUp: ShortcutType;
     volumeDown: ShortcutType;
-    "toggle-desktop-lyric": ShortcutType;
     openPlayer: ShortcutType;
     openPlayList: ShortcutType;
     closePlayer: ShortcutType;
@@ -70,12 +69,6 @@ export const useShortcutStore = defineStore("shortcut", {
         name: "音量减",
         shortcut: "CmdOrCtrl+ArrowDown",
         globalShortcut: "CmdOrCtrl+Shift+Down",
-      },
-      // 桌面歌词
-      "toggle-desktop-lyric": {
-        name: "桌面歌词",
-        shortcut: "CmdOrCtrl+KeyD",
-        globalShortcut: "CmdOrCtrl+Shift+D",
       },
       // 打开播放界面
       openPlayer: {

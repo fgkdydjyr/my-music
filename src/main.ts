@@ -63,10 +63,10 @@ app.config.errorHandler = (err, _instance, info) => {
 app.mount("#app");
 
 // 初始化 ipc
-if (!location.hash.includes("desktop-lyric")) initIpc();
+initIpc();
 
 // 根据设置判断是否要注册协议
-if (isElectron && !location.hash.includes("desktop-lyric")) {
+if (isElectron) {
   const settings = useSettingStore();
   sendRegisterProtocol("orpheus", settings.registryProtocol.orpheus);
 }

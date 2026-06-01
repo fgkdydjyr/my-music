@@ -245,7 +245,7 @@ const initWindowsIpc = (): void => {
     const mainWin = mainWindow.getWin();
     if (!mainWin) return;
     mainWin?.webContents.openDevTools({
-      title: "SPlayer DevTools",
+      title: "知音 DevTools",
       mode: isDev ? "right" : "detach",
     });
   });

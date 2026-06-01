@@ -73,11 +73,6 @@ export const useGeneralSettings = (): SettingConfig => {
     }
   };
 
-  // 任务栏进度
-  const closeTaskbarProgress = (val: boolean) => {
-    if (!isElectron) return;
-    if (!val) window.electron.ipcRenderer.send("set-bar", "none");
-  };
   // Orpheus 协议
   const handleOrpheusChange = async (isRegistry: boolean) => {
     sendRegisterProtocol("orpheus", isRegistry);
@@ -238,19 +233,6 @@ export const useGeneralSettings = (): SettingConfig => {
             value: computed({
               get: () => settingStore.showCloseAppTip,
               set: (v) => (settingStore.showCloseAppTip = v),
-            }),
-          },
-          {
-            key: "showTaskbarProgress",
-            label: "任务栏显示播放进度",
-            type: "switch",
-            description: "是否在任务栏显示歌曲播放进度",
-            value: computed({
-              get: () => settingStore.showTaskbarProgress,
-              set: (v) => {
-                settingStore.showTaskbarProgress = v;
-                closeTaskbarProgress(v);
-              },
             }),
           },
           {

@@ -2,8 +2,6 @@ import type { PlayModePayload } from "@shared";
 import { ipcMain } from "electron";
 import { getMainTray } from "../tray";
 import { appName, isMac } from "../utils/config";
-import lyricWindow from "../windows/lyric-window";
-import { useStore } from "../store";
 
 // 当前歌曲标题
 let currentSongTitle = appName;
@@ -22,10 +20,7 @@ const initTrayIpc = (): void => {
 
   // 音乐播放状态更改
   ipcMain.on("play-status-change", (_, playStatus: boolean) => {
-    const lyricWin = lyricWindow.getWin();
     tray?.setPlayState(playStatus ? "play" : "pause");
-    if (!lyricWin) return;
-    lyricWin.webContents.send("play-status-change", playStatus);
   });
 
   // 音乐名称更改
@@ -51,16 +46,6 @@ const initTrayIpc = (): void => {
   // 喜欢状态切换
   ipcMain.on("like-status-change", (_, likeStatus: boolean) => {
     tray?.setLikeState(likeStatus);
-  });
-
-  // 桌面歌词开关
-  ipcMain.on("desktop-lyric:toggle", (_, val: boolean) => {
-    tray?.setDesktopLyricShow(val);
-  });
-
-  // 锁定/解锁桌面歌词
-  ipcMain.on("desktop-lyric:toggle-lock", (_, { lock }: { lock: boolean }) => {
-    tray?.setDesktopLyricLock(lock);
   });
 };
 
