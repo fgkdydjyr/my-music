@@ -103,7 +103,7 @@ export const useLyricSettings = (): SettingConfig => {
             },
             defaultValue: 18,
           },
-        {
+          {
             key: "lyricFontWeight",
             label: "歌词字重设置",
             type: "input-number",

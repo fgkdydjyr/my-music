@@ -744,6 +744,9 @@ onBeforeUnmount(() => {
     &.on {
       opacity: 1 !important;
       transform: scale(1);
+      .content {
+        text-shadow: 0 0 20px rgba(var(--main-cover-color), 0.3);
+      }
       .tran,
       .roma {
         opacity: 0.6;

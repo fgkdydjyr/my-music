@@ -116,7 +116,6 @@ export const useMusicStore = defineStore("music", {
             yrcData: this.songLyric.yrcData ?? [],
           }),
         );
-
       }
     },
     // 获取歌曲封面

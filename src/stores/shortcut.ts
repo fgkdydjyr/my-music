@@ -9,7 +9,7 @@ type ShortcutType = {
   isRegistered?: boolean;
 };
 
-  interface ShortcutStore {
+interface ShortcutStore {
   globalOpen: boolean;
   shortcutList: {
     playOrPause: ShortcutType;

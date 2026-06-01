@@ -100,6 +100,32 @@ export const openFullscreenPlayerManager = async () => {
   });
 };
 
+/** 打开皮肤选择弹窗 */
+export const openSkinSelector = async () => {
+  if (isModalOpen("skinSelector", "皮肤选择已打开")) return;
+  const modalKey = "skinSelector";
+  setModalOpen(modalKey);
+  const { default: SkinSelector } = await import("@/components/Modal/SkinSelector.vue");
+  const modal = window.$modal.create({
+    preset: "card",
+    transformOrigin: "center",
+    autoFocus: false,
+    style: { width: "680px" },
+    title: "主题皮肤",
+    content: () => {
+      return h(SkinSelector, {
+        onClose: () => {
+          modal.destroy();
+          setModalClosed(modalKey);
+        },
+        onVnodeUnmounted: () => {
+          setModalClosed(modalKey);
+        },
+      });
+    },
+  });
+};
+
 /** 打开右键菜单配置弹窗 */
 export const openContextMenuManager = async () => {
   const { default: ContextMenuManager } =
@@ -567,7 +593,6 @@ export const openAMLLServer = async () => {
     },
   });
 };
-
 
 /** 打开自定义代码弹窗 */
 export const openCustomCode = async () => {

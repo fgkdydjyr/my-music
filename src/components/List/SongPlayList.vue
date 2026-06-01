@@ -61,7 +61,9 @@
                 <div
                   class="drag-handle"
                   @mousedown="handlePointerDown($event, index, songData.name || '未知曲目')"
-                  @touchstart.passive="handlePointerDown($event, index, songData.name || '未知曲目')"
+                  @touchstart.passive="
+                    handlePointerDown($event, index, songData.name || '未知曲目')
+                  "
                   @click.stop
                 >
                   <SvgIcon :size="20" name="Menu" />
@@ -250,6 +252,7 @@ const {
   .song-node {
     position: relative;
     padding: 8px 0;
+    animation: slide-up-fade-in 0.35s ease both;
 
     .drop-line {
       position: absolute;

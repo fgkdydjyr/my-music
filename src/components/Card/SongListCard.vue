@@ -76,6 +76,9 @@ const songList = computed(() => sampleSize(props.data, 3));
 .song-data-card {
   border-radius: 12px;
   cursor: pointer;
+  transition:
+    transform 0.25s var(--ease-out-back),
+    box-shadow 0.25s var(--ease-out-back);
   :deep(.n-card__content) {
     display: flex;
     height: 100%;
@@ -138,6 +141,8 @@ const songList = computed(() => sampleSize(props.data, 3));
     }
   }
   &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     border-color: rgba(var(--primary), 0.6);
     .cover {
       :deep(img) {

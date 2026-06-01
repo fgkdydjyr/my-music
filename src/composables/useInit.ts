@@ -25,7 +25,7 @@ export const useInit = () => {
   // 事件监听
   initEventListener();
 
-    onMounted(async () => {
+  onMounted(async () => {
     // 检查并执行设置迁移
     settingStore.checkAndMigrate();
     // 打印版本信息

@@ -269,17 +269,17 @@ const albumName = computed(() => {
     border: 2px solid rgba(var(--primary), 0.12);
     background-color: var(--surface-container-hex);
     transition:
-      transform 0.1s,
+      transform 0.25s var(--ease-out-back),
+      box-shadow 0.25s var(--ease-out-back),
       background-color 0.3s var(--n-bezier),
       border-color 0.3s var(--n-bezier);
     &.play {
       border-color: rgba(var(--primary), 0.58);
       background-color: rgba(var(--primary), 0.28);
     }
-    // &:active {
-    //   transform: scale(0.99);
-    // }
     &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       border-color: rgba(var(--primary), 0.58);
       .num {
         .n-text,

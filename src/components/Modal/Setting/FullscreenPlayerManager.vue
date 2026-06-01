@@ -46,6 +46,7 @@ const items = computed<Item[]>(() => [
     key: "commentCount",
     disabled: !settingStore.fullscreenPlayerElements.comments,
   },
+  { label: "显示歌词艺术模式", key: "lyricArt" },
 ]);
 
 const updateSetting = (key: FullscreenPlayerElementKey, val: boolean) => {

@@ -186,5 +186,3 @@ export const getCoverColor = async (coverUrl: string) => {
     image.remove();
   };
 };
-
-

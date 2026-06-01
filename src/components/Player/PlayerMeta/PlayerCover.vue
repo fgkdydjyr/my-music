@@ -5,35 +5,49 @@
     class="full-screen"
     :style="{ '--gradient-percent': settingStore.playerFullscreenGradient + '%' }"
   >
-    <s-image
-      :src="getCoverUrl('xl')"
-      :alt="musicStore.playSong.name"
-      :title="musicStore.playSong.name"
-      :lazy="false"
-      :width="'100%'"
-      :height="'100%'"
-    />
+    <Transition name="cover-switch" mode="out-in">
+      <s-image
+        :key="getCoverUrl('xl')"
+        :src="getCoverUrl('xl')"
+        :alt="musicStore.playSong.name"
+        :title="musicStore.playSong.name"
+        :lazy="false"
+        :width="'100%'"
+        :height="'100%'"
+      />
+    </Transition>
   </div>
   <!-- 普通封面 -->
   <div
     v-else
-    :class="['player-cover', settingStore.playerType, { playing: statusStore.playStatus }]"
+    :class="[
+      'player-cover',
+      settingStore.playerType,
+      `${recordStyle}-record`,
+      { playing: statusStore.playStatus },
+    ]"
   >
     <!-- 指针 -->
     <img
       v-if="settingStore.playerType === 'record'"
-      class="pointer"
-      src="/images/pointer.png?asset"
+      :class="['pointer', tonearmStyle]"
+      :src="tonearmImages[tonearmStyle]"
       alt="pointer"
     />
     <!-- 专辑图片 -->
-    <s-image
-      :key="getCoverUrl('l')"
-      :src="getCoverUrl('l')"
-      :observe-visibility="false"
-      object-fit="cover"
-      class="cover-img"
-    />
+    <Transition name="cover-switch" mode="out-in">
+      <s-image
+        :key="getCoverUrl('l')"
+        :src="getCoverUrl('l')"
+        :observe-visibility="false"
+        object-fit="cover"
+        class="cover-img"
+      />
+    </Transition>
+    <!-- 唱片标签 -->
+    <div v-if="settingStore.playerType === 'record' && showRecordLabel" class="record-label">
+      <span class="label-text">{{ musicStore.playSong.name?.slice(0, 8) || "SPlayer" }}</span>
+    </div>
     <!-- 动态封面 -->
     <Transition name="fade" mode="out-in">
       <video
@@ -53,11 +67,14 @@
 <script setup lang="ts">
 import { songDynamicCover } from "@/api/song";
 import { useMobile } from "@/composables/useMobile";
+import { useVinylRecord } from "@/composables/useVinylRecord";
 import { useBlobURLManager } from "@/core/resource/BlobURLManager";
 import { useSettingStore, useStatusStore, useMusicStore } from "@/stores";
 import { isLogin } from "@/utils/auth";
 import { isElectron } from "@/utils/env";
 import { isEmpty } from "lodash-es";
+
+const { recordStyle, tonearmStyle, showRecordLabel } = useVinylRecord();
 
 const musicStore = useMusicStore();
 const statusStore = useStatusStore();
@@ -74,6 +91,13 @@ const dynamicCoverLoaded = ref<boolean>(false);
 
 // 视频元素
 const videoRef = ref<HTMLVideoElement | null>(null);
+
+// 唱针图片映射（使用同一图片，不同 CSS 样式）
+const tonearmImages: Record<string, string> = {
+  classic: "/images/pointer.png?asset",
+  straight: "/images/pointer.png?asset",
+  wooden: "/images/pointer.png?asset",
+};
 
 // 清理本地封面资源
 const cleanupLocalCover = () => {
@@ -246,86 +270,27 @@ onBeforeUnmount(() => {
       width: 30%;
       left: 46%;
       top: -22%;
-      transform: rotate(-20deg);
-      transform-origin: 10% 10%;
       z-index: 2;
       transition: transform 0.3s;
+      &.classic {
+        transform: rotate(-20deg);
+        transform-origin: 10% 10%;
+      }
+      &.straight {
+        transform: rotate(-15deg) scaleX(-1);
+        transform-origin: 5% 5%;
+      }
+      &.wooden {
+        transform: rotate(-22deg);
+        transform-origin: 8% 8%;
+        filter: sepia(0.5);
+      }
     }
     .cover-img {
       animation: playerCoverRotate 30s linear infinite;
       animation-play-state: paused;
       border-radius: 50%;
       border: 1vh solid #ffffff30;
-      background:
-        linear-gradient(black 0%, transparent, black 98%),
-        radial-gradient(
-          #000 52%,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555,
-          #000,
-          #555
-        );
-      background-clip: content-box;
-      // width: 46vh;
-      // height: 46vh;
-      // min-width: 46vh;
       width: 100%;
       height: 100%;
       display: flex;
@@ -346,6 +311,117 @@ onBeforeUnmount(() => {
           top: auto;
           left: auto;
         }
+      }
+    }
+    // 唱片底部纹理
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    // 经典黑胶
+    &.classic-record {
+      .cover-img {
+        background:
+          linear-gradient(black 0%, transparent, black 98%),
+          repeating-radial-gradient(
+            circle at 50% 50%,
+            #333 0px,
+            #333 1px,
+            #555 1px,
+            #555 2px,
+            #444 2px,
+            #444 3px
+          );
+        background-clip: content-box;
+      }
+    }
+    // 彩胶
+    &.colored-record {
+      .cover-img {
+        background:
+          linear-gradient(
+            135deg,
+            rgba(var(--main-cover-color), 0.4),
+            transparent,
+            rgba(var(--main-cover-color), 0.3)
+          ),
+          repeating-radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+        background-clip: content-box;
+      }
+    }
+    // 透明水晶
+    &.crystal-record {
+      .cover-img {
+        background:
+          linear-gradient(45deg, rgba(255, 255, 255, 0.15), transparent, rgba(255, 255, 255, 0.1)),
+          repeating-radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.08) 0px,
+            rgba(255, 255, 255, 0.08) 1px,
+            transparent 1px,
+            transparent 4px
+          );
+        background-clip: content-box;
+        box-shadow: 0 0 30px rgba(var(--main-cover-color), 0.2);
+      }
+    }
+    // 复古
+    &.retro-record {
+      .cover-img {
+        filter: sepia(0.3) contrast(0.9);
+        background: repeating-radial-gradient(
+          circle at 50% 50%,
+          #8b7355 0px,
+          #8b7355 1px,
+          #a0895e 1px,
+          #a0895e 3px
+        );
+        background-clip: content-box;
+      }
+    }
+    // 唱片标签
+    .record-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22%;
+      height: 22%;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(var(--main-cover-color), 0.15),
+        rgba(var(--main-cover-color), 0.05)
+      );
+      border: 2px solid rgba(var(--main-cover-color), 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+      .label-text {
+        font-size: clamp(8px, 1.2vh, 14px);
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.2;
+        color: rgba(var(--main-cover-color), 0.7);
+        max-width: 85%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
       }
     }
   }
@@ -380,5 +456,25 @@ onBeforeUnmount(() => {
     width: 100%;
     height: 100%;
   }
+}
+
+// 封面切换过渡
+.cover-switch-enter-active {
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+}
+.cover-switch-leave-active {
+  transition:
+    opacity 0.25s var(--ease-in-out),
+    transform 0.25s var(--ease-in-out);
+}
+.cover-switch-enter-from {
+  opacity: 0;
+  transform: scale(0.92);
+}
+.cover-switch-leave-to {
+  opacity: 0;
+  transform: scale(1.08);
 }
 </style>

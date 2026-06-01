@@ -895,7 +895,6 @@ class LyricManager {
     if (ttml) return cleanTTMLTranslations(ttml);
     return null;
   }
-
 }
 
 let instance: LyricManager | null = null;

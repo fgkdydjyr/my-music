@@ -97,7 +97,11 @@
               <!-- 歌手 -->
               <div v-else class="artists">
                 <TextContainer :speed="0.5" class="artists-container">
-                  <n-text v-if="musicStore.playSong.type === 'radio'" class="ar-item" @click="showCreatorTip">
+                  <n-text
+                    v-if="musicStore.playSong.type === 'radio'"
+                    class="ar-item"
+                    @click="showCreatorTip"
+                  >
                     {{ musicStore.playSong.dj?.creator || "未知艺术家" }}
                   </n-text>
                   <template v-else-if="Array.isArray(musicStore.playSong.artists)">
@@ -610,9 +614,12 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
       --n-width: 44px;
       --n-height: 44px;
       margin: 0 4px;
+      position: relative;
+      overflow: hidden;
       transition:
         background-color 0.3s,
-        transform 0.3s;
+        transform 0.3s,
+        box-shadow 0.3s;
       .n-icon {
         transition: opacity 0.1s ease-in-out;
       }
@@ -620,7 +627,8 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
         transform: scale(1.1);
       }
       &:active {
-        transform: scale(1);
+        transform: scale(0.95);
+        box-shadow: 0 0 0 4px rgba(var(--primary), 0.15);
       }
     }
     .play-icon {
@@ -630,6 +638,8 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
       width: 38px;
       height: 38px;
       border-radius: 50%;
+      position: relative;
+      overflow: hidden;
       will-change: transform;
       transition:
         background-color 0.3s,
@@ -637,14 +647,28 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
       cursor: pointer;
       margin: 0 2px;
       .n-icon {
+        position: relative;
+        z-index: 1;
         color: var(--primary-hex);
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle, rgba(var(--primary), 0.25) 0%, transparent 70%);
+        opacity: 0;
+        pointer-events: none;
       }
       &:hover {
         transform: scale(1.1);
         background-color: rgba(var(--primary), 0.16);
       }
       &:active {
-        transform: scale(1);
+        transform: scale(0.95);
+      }
+      &:active::after {
+        animation: ripple-pulse 0.5s ease-out;
       }
     }
   }

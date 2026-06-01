@@ -39,6 +39,14 @@
           >
             <SvgIcon name="Download" />
           </div>
+          <!-- 歌词艺术模式 -->
+          <div
+            v-if="settingStore.fullscreenPlayerElements.lyricArt"
+            class="menu-icon"
+            @click.stop="openLyricArt"
+          >
+            <SvgIcon name="AutoAwesome" />
+          </div>
           <!-- 显示评论 -->
           <n-badge
             :value="formatCommentCount(statusStore.songCommentCount)"
@@ -183,6 +191,10 @@ const fetchCommentCount = async () => {
   }
 };
 
+const openLyricArt = () => {
+  statusStore.showLyricArt = true;
+};
+
 const showCommentButton = computed(
   () =>
     !musicStore.playSong.path &&
@@ -310,20 +322,36 @@ onBeforeUnmount(() => {
       justify-content: center;
       padding: 8px;
       border-radius: 8px;
+      position: relative;
+      overflow: hidden;
       transition:
         background-color 0.3s,
         transform 0.3s;
       cursor: pointer;
       .n-icon {
+        position: relative;
+        z-index: 1;
         font-size: 24px;
         color: rgb(var(--main-cover-color));
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle, rgba(var(--main-cover-color), 0.2) 0%, transparent 70%);
+        opacity: 0;
+        pointer-events: none;
       }
       &:hover {
         transform: scale(1.1);
         background-color: rgba(var(--main-cover-color), 0.14);
       }
       &:active {
-        transform: scale(1);
+        transform: scale(0.95);
+      }
+      &:active::after {
+        animation: ripple-pulse 0.5s ease-out;
       }
     }
     :deep(.n-badge-sup) {
@@ -364,6 +392,8 @@ onBeforeUnmount(() => {
         width: 38px;
         height: 38px;
         border-radius: 50%;
+        position: relative;
+        overflow: hidden;
         will-change: transform;
         transition:
           background-color 0.3s,
@@ -371,14 +401,32 @@ onBeforeUnmount(() => {
         cursor: pointer;
         margin: 0 4px;
         .n-icon {
+          position: relative;
+          z-index: 1;
           color: rgb(var(--main-cover-color));
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(
+            circle,
+            rgba(var(--main-cover-color), 0.2) 0%,
+            transparent 70%
+          );
+          opacity: 0;
+          pointer-events: none;
         }
         &:hover {
           transform: scale(1.1);
           background-color: rgba(var(--main-cover-color), 0.14);
         }
         &:active {
-          transform: scale(1);
+          transform: scale(0.95);
+        }
+        &:active::after {
+          animation: ripple-pulse 0.5s ease-out;
         }
       }
       .play-pause {
@@ -389,10 +437,15 @@ onBeforeUnmount(() => {
         --n-color-focus: rgba(var(--main-cover-color), 0.2);
         --n-color-pressed: rgba(var(--main-cover-color), 0.12);
         margin: 0 12px;
+        position: relative;
+        overflow: hidden;
         transition:
           background-color 0.3s,
-          transform 0.3s;
+          transform 0.3s,
+          box-shadow 0.3s;
         .n-icon {
+          position: relative;
+          z-index: 1;
           color: rgb(var(--main-cover-color));
           transition: opacity 0.1s ease-in-out;
         }
@@ -403,7 +456,8 @@ onBeforeUnmount(() => {
           transform: scale(1.1);
         }
         &:active {
-          transform: scale(1);
+          transform: scale(0.95);
+          box-shadow: 0 0 0 4px rgba(var(--main-cover-color), 0.15);
         }
       }
     }

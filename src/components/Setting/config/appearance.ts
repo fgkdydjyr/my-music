@@ -3,6 +3,7 @@ import { isElectron } from "@/utils/env";
 import {
   openCustomCode,
   openThemeConfig,
+  openSkinSelector,
   openSidebarHideManager,
   openHomePageSectionManager,
   openPlaylistPageManager,
@@ -63,6 +64,14 @@ export const useAppearanceSettings = (): SettingConfig => {
               forcedValue: "auto",
               forcedDescription: "请关闭自定义背景后调节",
             },
+          },
+          {
+            key: "skinSelector",
+            label: "主题皮肤",
+            type: "button",
+            description: "一键切换完整皮肤（配色+布局+背景+歌词风格）",
+            buttonLabel: "选择",
+            action: openSkinSelector,
           },
           {
             key: "themeConfig",
@@ -404,6 +413,21 @@ export const useAppearanceSettings = (): SettingConfig => {
               condition: () => settingStore.playbackEngine === "mpv",
               forcedValue: false,
               forcedDescription: "MPV 引擎暂不支持显示音乐频谱",
+            },
+          },
+          {
+            key: "moodAtmosphere",
+            label: "情绪氛围联动",
+            type: "switch",
+            description: "根据歌曲音频特征自动切换主题色和视觉氛围",
+            value: computed({
+              get: () => settingStore.moodAtmosphere,
+              set: (v) => (settingStore.moodAtmosphere = v),
+            }),
+            forceIf: {
+              condition: () => settingStore.playbackEngine === "mpv",
+              forcedValue: false,
+              forcedDescription: "MPV 引擎暂不支持",
             },
           },
         ],

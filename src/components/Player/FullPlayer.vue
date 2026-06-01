@@ -293,6 +293,9 @@ onBeforeUnmount(() => {
   backdrop-filter: blur(80px);
   overflow: hidden;
   z-index: 1000;
+  transition:
+    color 0.6s var(--ease-out),
+    background-color 0.6s var(--ease-out);
   .lrc-instant {
     position: absolute;
     top: 0;

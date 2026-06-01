@@ -32,11 +32,14 @@
 <script setup lang="ts">
 import { useMusicStore, useSettingStore, useStatusStore } from "@/stores";
 import { usePlayerController } from "@/core/player/PlayerController";
+import { useMoodIntegration } from "@/composables/useMoodIntegration";
 
 const musicStore = useMusicStore();
 const settingStore = useSettingStore();
 const statusStore = useStatusStore();
 const player = usePlayerController();
+
+const { tickMood } = useMoodIntegration();
 
 // 低频音量
 const lowFreqVolume = ref(1.0);
@@ -46,9 +49,10 @@ const flowSpeed = computed(() => {
   else return settingStore.playerBackgroundFlowSpeed ?? 4;
 });
 
-// 更新低频音量
+// 更新低频音量 + 情绪分析
 const { pause: pauseRaf, resume: resumeRaf } = useRafFn(
   () => {
+    tickMood();
     if (
       settingStore.playerBackgroundLowFreqVolume &&
       settingStore.playerBackgroundType === "animation" &&
@@ -64,11 +68,13 @@ const { pause: pauseRaf, resume: resumeRaf } = useRafFn(
 watch(
   () => [
     settingStore.playerBackgroundLowFreqVolume,
+    settingStore.moodAtmosphere,
     settingStore.playerBackgroundType,
     statusStore.playStatus,
   ],
-  ([enabled, bgType, playing]) => {
-    if (enabled && bgType === "animation") {
+  ([enabled, moodEnabled, bgType, playing]) => {
+    const shouldRun = (enabled && bgType === "animation") || moodEnabled;
+    if (shouldRun) {
       playing ? resumeRaf() : pauseRaf();
     } else {
       pauseRaf();
@@ -111,14 +117,17 @@ onBeforeUnmount(() => {
       height: auto;
       transform: scale(1.5);
       filter: blur(80px) contrast(1.2);
+      transition: opacity 0.6s var(--ease-out);
     }
   }
   &.color {
     background-color: rgb(var(--main-cover-color));
+    transition: background-color 0.8s var(--ease-out);
     .color {
       width: 100%;
       height: 100%;
       background-color: rgb(var(--main-cover-color));
+      transition: background-color 0.8s var(--ease-out);
     }
   }
   &.animation {

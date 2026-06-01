@@ -381,6 +381,7 @@ export interface SettingState {
     lyricOffset: boolean;
     lyricSettings: boolean;
     commentCount: boolean;
+    lyricArt: boolean;
   };
   /** 右键菜单显示配置 */
   contextMenuOptions: {
@@ -437,6 +438,8 @@ export interface SettingState {
   };
   /** 播放器跟随封面主色 */
   playerFollowCoverColor: boolean;
+  /** 情绪氛围联动 */
+  moodAtmosphere: boolean;
   /** 进度条悬浮时显示歌词 */
   progressLyricShow: boolean;
   /** Discord RPC 配置 */
@@ -677,6 +680,7 @@ export const useSettingStore = defineStore("setting", {
       lyricOffset: true,
       lyricSettings: true,
       commentCount: false,
+      lyricArt: true,
     },
     contextMenuOptions: {
       play: true,
@@ -724,6 +728,7 @@ export const useSettingStore = defineStore("setting", {
       nowPlayingEnabled: true,
     },
     playerFollowCoverColor: true,
+    moodAtmosphere: false,
     progressLyricShow: true,
     discordRpc: {
       enabled: false,

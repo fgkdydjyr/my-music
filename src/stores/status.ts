@@ -25,6 +25,8 @@ interface StatusState {
   showPlayBar: boolean;
   /** 全屏播放器 */
   showFullPlayer: boolean;
+  /** 歌词艺术模式 */
+  showLyricArt: boolean;
   /** 播放器功能显示 */
   playerMetaShow: boolean;
   /** 播放列表状态 */
@@ -245,6 +247,7 @@ export const useStatusStore = defineStore("status", {
     automixFxSeq: 0,
     automixEndedSeq: 0,
     songCommentCount: 0,
+    showLyricArt: false,
   }),
   getters: {
     // 播放音量图标
@@ -419,6 +422,7 @@ export const useStatusStore = defineStore("status", {
         playLoading: false,
         playListShow: false,
         showFullPlayer: false,
+        showLyricArt: false,
         personalFmMode: false,
         playIndex: -1,
         repeatMode: "off",

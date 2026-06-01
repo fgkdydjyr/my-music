@@ -1,3 +1,14 @@
+// 过渡曲线变量
+:root {
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --ease-flow: cubic-bezier(0.2, 0, 0.2, 1);
+  --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+}
+
 // 路由动画 - 离场动画尽量短，减少 out-in 等待时间
 .router-slide-enter-active {
   transition:
@@ -402,5 +413,39 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+// 按钮涟漪效果
+@keyframes ripple-pulse {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+// 歌词发光效果
+@keyframes lyric-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+}
+
+// 频谱底部辉光
+@keyframes spectrum-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
   }
 }
