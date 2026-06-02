@@ -86,11 +86,11 @@
 }
 .router-flow-enter-from {
   opacity: 0;
-  transform: translateY(10px) scale(0.99);
+  transform: translate3d(0, 10px, 0) scale(0.99);
 }
 .router-flow-leave-to {
   opacity: 0;
-  transform: translateY(-5px) scale(0.99);
+  transform: translate3d(0, -5px, 0) scale(0.99);
 }
 
 // mask-left
@@ -230,26 +230,26 @@
 // up
 .up-enter-active,
 .up-leave-active {
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   transition: transform 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 .up-enter-from,
 .up-leave-to {
-  transform: translateY(100%);
+  transform: translate3d(0, 100%, 0);
 }
 
 // left
 .left-enter-active,
 .left-leave-active {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
   transition:
     transform 0.3s,
     opacity 0.3s;
 }
 .left-enter-from,
 .left-leave-to {
-  transform: translateX(-100%);
+  transform: translate3d(-100%, 0, 0);
 }
 
 // smooth
@@ -262,7 +262,7 @@
 .smooth-enter-from,
 .smooth-leave-to {
   opacity: 0;
-  transform: translateY(20px) scale(0.96);
+  transform: translate3d(0, 20px, 0) scale(0.96);
 }
 
 // flow (player)
@@ -276,7 +276,7 @@
 .flow-enter-from,
 .flow-leave-to {
   opacity: 0;
-  transform: scale(0.92) translateY(30px);
+  transform: scale(0.92) translate3d(0, 30px, 0);
   filter: blur(10px);
 }
 
@@ -287,7 +287,7 @@
 }
 .slideLeft-enter-from,
 .slideLeft-leave-to {
-  transform: translateX(-100%);
+  transform: translate3d(-100%, 0, 0);
 }
 
 // 歌词滚动动画
@@ -297,11 +297,11 @@
 }
 .lyric-slide-enter-from {
   opacity: 0;
-  transform: translateY(100%);
+  transform: translate3d(0, 100%, 0);
 }
 .lyric-slide-leave-to {
   opacity: 0;
-  transform: translateY(-100%);
+  transform: translate3d(0, -100%, 0);
 }
 .lyric-slide-leave-active {
   position: absolute;
@@ -319,13 +319,13 @@
 
 @keyframes coverRotate {
   0% {
-    transform: rotate(0deg) scale(1) translateX(0);
+    transform: rotate(0deg) scale(1) translate3d(0, 0, 0);
   }
   50% {
-    transform: rotate(180deg) scale(2) translateX(40%);
+    transform: rotate(180deg) scale(2) translate3d(40%, 0, 0);
   }
   100% {
-    transform: rotate(360deg) scale(1) translateX(0);
+    transform: rotate(360deg) scale(1) translate3d(0, 0, 0);
   }
 }
 
@@ -351,47 +351,45 @@
 @keyframes fade-down {
   0% {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translate3d(0, -10px, 0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes fade-up {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 10px, 0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes breathe {
   0% {
-    transform: scale(0.95);
+    transform: scale3d(0.95, 0.95, 1);
   }
-
   50% {
-    transform: scale(1.1);
+    transform: scale3d(1.1, 1.1, 1);
   }
-
   100% {
-    transform: scale(0.95);
+    transform: scale3d(0.95, 0.95, 1);
   }
 }
 
 @keyframes slide-up-fade-in {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -448,4 +446,34 @@
   50% {
     opacity: 0.6;
   }
+}
+
+// 按压反馈
+@keyframes press-feedback {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// 轻触涟漪
+@keyframes tap-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+// GPU 加速 mixin（仅用于主动画元素，勿滥用）
+@mixin gpu {
+  transform: translate3d(0, 0, 0);
 }

@@ -918,12 +918,16 @@ class PlayerController {
   ) {
     const dataStore = useDataStore();
     const statusStore = useStatusStore();
+    const settingStore = useSettingStore();
     const songManager = useSongManager();
-    // 先暂停当前播放
     const audioManager = useAudioManager();
+    // 交叉淡入淡出：旧歌渐出的同时新歌渐入
+    const useCrossfade = settingStore.songVolumeFade && settingStore.playbackEngine === "web-audio";
+    if (!useCrossfade) {
+      audioManager.stop();
+    }
     // 立即显示加载状态
     statusStore.playLoading = true;
-    audioManager.stop();
     // 私人FM
     if (statusStore.personalFmMode) {
       await songManager.initPersonalFM(true);
@@ -966,7 +970,11 @@ class PlayerController {
     }
     // 更新状态并播放
     statusStore.playIndex = nextIndex;
-    await this.playSong({ autoPlay: play });
+    await this.playSong({
+      autoPlay: play,
+      crossfade: useCrossfade,
+      crossfadeDuration: useCrossfade ? settingStore.songVolumeFadeTime / 1000 : undefined,
+    });
   }
 
   /** 获取总时长 (ms) */
@@ -1213,6 +1221,7 @@ class PlayerController {
   public async togglePlayIndex(index: number, play: boolean = false) {
     const dataStore = useDataStore();
     const statusStore = useStatusStore();
+    const settingStore = useSettingStore();
     const audioManager = useAudioManager();
 
     try {
@@ -1220,8 +1229,14 @@ class PlayerController {
       const { playList } = dataStore;
       // 若超出播放列表
       if (index >= playList.length) return;
-      // 先停止当前播放
-      audioManager.stop();
+      // 交叉淡入淡出：旧歌渐出的同时新歌渐入
+      const useCrossfade =
+        settingStore.songVolumeFade &&
+        settingStore.playbackEngine === "web-audio" &&
+        statusStore.playStatus;
+      if (!useCrossfade) {
+        audioManager.stop();
+      }
       // 相同歌曲且需要播放
       if (statusStore.playIndex === index) {
         if (play) await this.play();
@@ -1233,7 +1248,11 @@ class PlayerController {
       statusStore.currentTime = 0;
       statusStore.progress = 0;
       statusStore.lyricIndex = -1;
-      await this.playSong({ autoPlay: play });
+      await this.playSong({
+        autoPlay: play,
+        crossfade: useCrossfade,
+        crossfadeDuration: useCrossfade ? settingStore.songVolumeFadeTime / 1000 : undefined,
+      });
     } catch (error) {
       console.error("Error in togglePlayIndex:", error);
       statusStore.playLoading = false;

@@ -413,9 +413,9 @@ export const usePlaySettings = (): SettingConfig => {
                 key: "songVolumeFadeTime",
                 label: "渐入渐出时长",
                 type: "input-number",
-                description: "单位 ms，最小 200，最大 2000",
+                description: "单位 ms，最小 200，最大 5000（切歌时自动交叉淡入淡出）",
                 min: 200,
-                max: 2000,
+                max: 5000,
                 suffix: "ms",
                 value: computed({
                   get: () => settingStore.songVolumeFadeTime,

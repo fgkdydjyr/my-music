@@ -436,7 +436,7 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
 .main-player {
   position: fixed;
   left: 0;
-  bottom: -90px;
+  bottom: 0;
   height: 80px;
   padding: 0 15px;
   width: 100%;
@@ -444,10 +444,11 @@ const showCreatorTip = () => window.$message.info("暂不支持查看主播主�
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  transition: bottom 0.3s;
+  transform: translate3d(0, calc(100% + 10px), 0);
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 10;
   &.show {
-    bottom: 0;
+    transform: translate3d(0, 0, 0);
   }
   .player-slider {
     position: absolute;

@@ -1,3 +1,8 @@
+// 优化滚动体验
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -73,10 +78,38 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+// GPU 加速基类 - 用于高频动画元素
+.gpu {
+  transform: translate3d(0, 0, 0);
+}
+.gpu-layer {
+  contain: layout paint style;
+}
+// 按压反馈
+.press {
+  cursor: pointer;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+  &:active {
+    transform: scale(0.92);
+  }
+}
+// 悬浮提升
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  &:hover {
+    transform: translate3d(0, -2px, 0);
+  }
 }
 
 a,
@@ -91,6 +124,7 @@ audio {
   height: 100%;
   display: flex;
   flex-direction: column;
+  contain: layout paint style;
 }
 
 // text-hidden
@@ -161,9 +195,6 @@ audio {
 
 // slider
 .n-slider {
-  // .n-slider-rail {
-  //   backdrop-filter: blur(10px);
-  // }
   .n-slider-handle {
     transition:
       opacity 0.3s var(--n-bezier),
@@ -181,9 +212,6 @@ audio {
   border-radius: 8px !important;
   backdrop-filter: blur(20px);
   overflow: hidden;
-  // &:not(.n-popover--raw) {
-  //   color: var(--primary-hex);
-  // }
 }
 
 // layout-toggle-bar
@@ -278,43 +306,10 @@ audio {
   border: 1px solid rgba(var(--primary), 0.28);
 }
 
-// select
-// .n-select {
-//   .n-base-selection {
-//     .n-base-selection-label {
-//       background-color: var(--n-border-color);
-//     }
-//   }
-// }
-
 // alert
 .n-alert {
   --n-border-radius: 8px !important;
 }
-
-// tag
-// .n-tag {
-//   font-size: 13px;
-//   padding: 0 16px;
-//   line-height: 0;
-//   cursor: pointer;
-//   transition:
-//     transform 0.3s,
-//     background-color 0.3s,
-//     color 0.3s;
-//   background-color: rgba(var(--primary), 0.08);
-//   &.choose {
-//     background-color: rgba(var(--primary), 0.28);
-//     color: var(--primary-hex);
-//   }
-//   &:hover {
-//     background-color: rgba(var(--primary), 0.28);
-//     color: var(--primary-hex);
-//   }
-//   &:active {
-//     transform: scale(0.98);
-//   }
-// }
 
 // .n-badge
 .n-badge {

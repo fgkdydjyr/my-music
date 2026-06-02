@@ -28,6 +28,7 @@ const statusStore = useStatusStore();
 .sider-all {
   display: flex;
   flex-direction: column;
+  contain: layout paint style;
   .logo {
     display: flex;
     align-items: center;
@@ -57,10 +58,10 @@ const statusStore = useStatusStore();
       }
     }
     &:hover {
-      transform: scale(1.05);
+      transform: scale3d(1.05, 1.05, 1);
     }
     &:active {
-      transform: scale(1);
+      transform: scale3d(1, 1, 1);
     }
   }
 }

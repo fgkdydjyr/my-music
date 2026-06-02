@@ -20,16 +20,10 @@ const player = usePlayerController();
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const isKeepDrawing = ref<boolean>(true);
 
-
-
 /**
  * 根据频率索引获取颜色
  */
-const getBarColor = (
-  index: number,
-  total: number,
-  baseColor: string,
-): string => {
+const getBarColor = (index: number, total: number, baseColor: string): string => {
   const ratio = index / total;
   // 从暖色到冷色的渐变
   if (baseColor && baseColor !== "#efefef") {

@@ -280,14 +280,14 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .full-player {
   position: fixed;
-  top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 200;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  contain: layout paint style;
   color: rgb(var(--main-cover-color));
   background-color: #00000060;
   backdrop-filter: blur(80px);
