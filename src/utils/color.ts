@@ -102,7 +102,7 @@ export const setColorSchemes = (
     const r = parseInt(color.slice(1, 3), 16);
     const g = parseInt(color.slice(3, 5), 16);
     const b = parseInt(color.slice(5, 7), 16);
-    colorModeData.primary = { r, g, b };
+    if (colorModeData) colorModeData.primary = { r, g, b };
   }
   const modifiedColorModeData: { [key: string]: string } = {};
   // 是否全局应用
