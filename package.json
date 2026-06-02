@@ -1,7 +1,7 @@
 {
   "name": "splayer",
   "productName": "知音",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "packageManager": "pnpm@10.28.1",
   "description": "懂你的音乐播放器",
   "main": "./out/main/index.js",

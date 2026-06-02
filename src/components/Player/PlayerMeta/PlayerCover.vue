@@ -3,6 +3,7 @@
   <div
     v-if="settingStore.playerType === 'fullscreen' && !isTablet"
     class="full-screen"
+    :class="{ 'full-center': fullWidth }"
     :style="{ '--gradient-percent': settingStore.playerFullscreenGradient + '%' }"
   >
     <Transition name="cover-switch" mode="out-in">
@@ -73,6 +74,8 @@ import { useSettingStore, useStatusStore, useMusicStore } from "@/stores";
 import { isLogin } from "@/utils/auth";
 import { isElectron } from "@/utils/env";
 import { isEmpty } from "lodash-es";
+
+defineProps<{ fullWidth?: boolean }>();
 
 const { recordStyle, tonearmStyle, showRecordLabel } = useVinylRecord();
 
@@ -451,10 +454,16 @@ onBeforeUnmount(() => {
   z-index: 0;
   mask-image: linear-gradient(to right, #000 var(--gradient-percent), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, #000 var(--gradient-percent), transparent 100%);
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   :deep(img) {
     object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+  &.full-center {
+    width: 100vw;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 }
 

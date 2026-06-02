@@ -303,6 +303,9 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 80px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   .control-content {
     width: 100%;
     height: 100%;

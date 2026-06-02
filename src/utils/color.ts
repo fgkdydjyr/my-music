@@ -97,6 +97,13 @@ export const setColorSchemes = (
   if (!colorData) throw new Error("Color data not found");
   // 指定模式颜色数据
   const colorModeData = colorData[mode];
+  // 如果传入的是 Hex 源色，直接用源色覆盖主色，跳过 Material 调色板
+  if (typeof color === "string") {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    colorModeData.primary = { r, g, b };
+  }
   const modifiedColorModeData: { [key: string]: string } = {};
   // 是否全局应用
   if (!settingStore.themeGlobalColor && colorModeData) {

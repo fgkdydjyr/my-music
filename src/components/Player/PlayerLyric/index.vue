@@ -167,23 +167,11 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   min-height: 0;
-  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
-  mask: linear-gradient(
-    180deg,
-    hsla(0, 0%, 100%, 0) 0,
-    hsla(0, 0%, 100%, 0.6) 5%,
-    #fff 10%,
-    #fff 75%,
-    hsla(0, 0%, 100%, 0.6) 85%,
-    hsla(0, 0%, 100%, 0)
-  );
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       .lyric-menu {
         pointer-events: auto;
-        &.show {
-          opacity: 0.6;
-        }
+        opacity: 1;
       }
     }
   }
@@ -191,34 +179,39 @@ onBeforeUnmount(() => {
 .lyric-menu {
   position: absolute;
   pointer-events: none;
-  top: 0;
-  right: 0;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  width: 80px;
-  padding: 20% 0;
+  gap: 10px;
+  padding: 12px 8px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 220, 180, 0.08);
   opacity: 0;
   transition: opacity 0.3s;
+  z-index: 10;
   .divider {
-    height: 2px;
-    width: 40px;
-    background-color: rgba(var(--main-cover-color), 0.12);
+    height: 1px;
+    width: 28px;
+    background: rgba(255, 255, 255, 0.1);
   }
   .time {
     width: 40px;
-    margin: 8px 0;
     padding: 4px 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    background-color: rgba(var(--main-cover-color), 0.14);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 1px solid rgba(var(--main-cover-color), 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: background-color 0.3s;
     cursor: pointer;
     &::after {
@@ -226,7 +219,7 @@ onBeforeUnmount(() => {
       margin-left: 2px;
     }
     &:hover {
-      background-color: rgba(var(--main-cover-color), 0.28);
+      background: rgba(255, 255, 255, 0.12);
     }
   }
   .menu-icon {
@@ -239,13 +232,13 @@ onBeforeUnmount(() => {
       background-color 0.3s,
       transform 0.3s;
     cursor: pointer;
-    .n-icon {
-      font-size: 30px;
-      color: rgb(var(--main-cover-color));
+    :deep(.n-icon) {
+      font-size: 26px;
+      color: rgba(255, 255, 255, 0.6);
     }
     &:hover {
       transform: scale(1.1);
-      background-color: rgba(var(--main-cover-color), 0.14);
+      background: rgba(255, 255, 255, 0.08);
     }
     &:active {
       transform: scale(1);
@@ -263,22 +256,21 @@ onBeforeUnmount(() => {
     opacity: 0.6;
   }
   :deep(.n-input) {
-    --n-caret-color: rgb(var(--main-cover-color));
-    --n-color: rgba(var(--main-cover-color), 0.1);
-    --n-color-focus: rgba(var(--main-cover-color), 0.1);
-    --n-text-color: rgb(var(--main-cover-color));
-    --n-border-hover: 1px solid rgba(var(--main-cover-color), 0.28);
-    --n-border-focus: 1px solid rgba(var(--main-cover-color), 0.28);
-    --n-suffix-text-color: rgb(var(--main-cover-color));
-    --n-box-shadow-focus: 0 0 8px 0 rgba(var(--main-cover-color), 0.3);
-    // 文本选中颜色
+    --n-caret-color: rgba(255, 255, 255, 0.8);
+    --n-color: rgba(255, 255, 255, 0.06);
+    --n-color-focus: rgba(255, 255, 255, 0.08);
+    --n-text-color: rgba(255, 255, 255, 0.8);
+    --n-border-hover: 1px solid rgba(255, 255, 255, 0.2);
+    --n-border-focus: 1px solid rgba(255, 255, 255, 0.2);
+    --n-suffix-text-color: rgba(255, 255, 255, 0.6);
+    --n-box-shadow-focus: 0 0 8px 0 rgba(255, 255, 255, 0.1);
     input {
       &::selection {
-        background-color: rgba(var(--main-cover-color));
+        background-color: rgba(255, 255, 255, 0.2);
       }
     }
     .n-button {
-      --n-text-color: rgb(var(--main-cover-color));
+      --n-text-color: rgba(255, 255, 255, 0.8);
     }
   }
 }

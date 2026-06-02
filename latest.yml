@@ -1,0 +1,14 @@
+version: 3.0.2
+files:
+  - url: splayer-3.0.2-x64-setup.exe
+    sha512: zd8uLzWN5jmLKANjem072ECw7EhvqKXe68OTLr0G/iBjzcy7tfp0fedLe4ykwYhEgCS1UNuLLy3gBbmslHnaiQ==
+    size: 126368432
+  - url: splayer-3.0.2-arm64-setup.exe
+    sha512: fThTZKy6M7Bb1Hsg9H3ONJ5zjUx7Zmo8QJdzKigqY0zHg/GGdgnqIhASN1AYPKDCeV3tFxx0A/B5XHNoqKDu8w==
+    size: 128672055
+  - url: splayer-3.0.2-setup.exe
+    sha512: fj1cyz1Md6sG4uJv4Y0wMhmriF9NKeaVahkv7iyVob3CIwVyFRai35JFQLYksgxz3xf8ShO3bAh4AsvkTVMjmA==
+    size: 254475221
+path: splayer-3.0.2-x64-setup.exe
+sha512: zd8uLzWN5jmLKANjem072ECw7EhvqKXe68OTLr0G/iBjzcy7tfp0fedLe4ykwYhEgCS1UNuLLy3gBbmslHnaiQ==
+releaseDate: "2026-06-02T02:55:48.753Z"

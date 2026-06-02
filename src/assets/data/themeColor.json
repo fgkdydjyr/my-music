@@ -1,8 +1,8 @@
 {
   "default": {
     "label": "default",
-    "name": "默认",
-    "color": "#fe7971"
+    "name": "网易红",
+    "color": "#C20C0C"
   },
   "red": {
     "label": "red",

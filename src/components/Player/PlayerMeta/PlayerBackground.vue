@@ -98,6 +98,7 @@ onBeforeUnmount(() => {
   height: 100%;
   overflow: hidden;
   z-index: -1;
+  // 暖色渐变覆盖层
   &::after {
     content: "";
     position: absolute;
@@ -105,8 +106,10 @@ onBeforeUnmount(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(20px);
+    background:
+      linear-gradient(135deg, rgba(180, 100, 60, 0.15), rgba(80, 40, 60, 0.15)), rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
   &.blur {
     display: flex;

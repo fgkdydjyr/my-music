@@ -28,12 +28,13 @@
           <!-- 菜单 -->
           <PlayerMenu @mouseenter.stop="stopHide" @mouseleave.stop="resumeHide" />
           <!-- 全屏封面 -->
-          <PlayerCover v-if="showFullScreenCover" />
+          <PlayerCover v-if="showFullScreenCover" :full-width="centerLyric" />
           <!-- 主内容 -->
           <Transition name="zoom" mode="out-in">
             <div
               :key="playerContentKey"
               :class="['player-content', playerContentClasses]"
+              :style="playerContentStyles"
               @mousemove="playerMove"
             >
               <!-- 左侧封面和数据 -->
@@ -64,7 +65,7 @@
               >
                 <PlayerData
                   v-if="showRightPlayerData"
-                  :center="pureLyricMode || noLrc"
+                  :center="centerLyric || pureLyricMode || noLrc"
                   :light="!(isFullscreenType && noLrc)"
                 />
                 <PlayerLyric v-if="!noLrc" />
@@ -143,19 +144,31 @@ const isFullscreenComment = computed(() => showComment.value && !isHalfComment.v
 /** 主内容 key */
 const playerContentKey = computed(() => `${musicStore.playSong.id}-${statusStore.pureLyricMode}`);
 
+/** 歌词居中模式（全屏封面类型且有歌词时） */
+const centerLyric = computed(() => !noLrc.value && isFullscreenType.value);
+
 /** 主内容 class */
 const playerContentClasses = computed(() => ({
   "no-lrc": noLrc.value,
   "full-screen": isFullscreenType.value,
   pure: pureLyricMode.value && musicStore.isHasLrc,
+  "center-lyric": centerLyric.value,
+}));
+
+/** 主内容样式（居中时撑满全屏） */
+const playerContentStyles = computed(() => ({
+  height: centerLyric.value ? "100vh" : "calc(100vh - 160px)",
 }));
 
 /** 左右布局样式 */
 const layoutStyles = computed(() => {
   const ratio = isFullscreenType.value ? 50 : settingStore.playerStyleRatio;
+  const isCenter = centerLyric.value;
   return {
     left: { width: `${ratio}%`, minWidth: `${ratio}%` },
-    right: { width: `${100 - ratio}%`, maxWidth: `${100 - ratio}%` },
+    right: isCenter
+      ? { left: "0", width: "100%", maxWidth: "100%" }
+      : { width: `${100 - ratio}%`, maxWidth: `${100 - ratio}%` },
   };
 });
 
@@ -168,6 +181,7 @@ const commentHalfStyle = computed(() => ({
 /** 是否显示左侧封面区域 */
 const showLeftContent = computed(
   () =>
+    !centerLyric.value &&
     !pureLyricMode.value &&
     !isFullscreenType.value &&
     // 左半屏评论显示中时，隐藏左侧封面
@@ -181,7 +195,7 @@ const hideRightLyric = computed(
 
 /** 是否显示右侧 PlayerData */
 const showRightPlayerData = computed(
-  () => (pureLyricMode.value && musicStore.isHasLrc) || isFullscreenType.value,
+  () => centerLyric.value || (pureLyricMode.value && musicStore.isHasLrc) || isFullscreenType.value,
 );
 
 /** 是否显示全屏封面 */
@@ -374,6 +388,18 @@ onBeforeUnmount(() => {
         align-items: center;
         width: 100% !important;
         max-width: 100% !important;
+      }
+    }
+    &.center-lyric {
+      .content-right {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        .player-data {
+          margin-top: 0;
+          margin-bottom: 12px;
+        }
       }
     }
     &.no-lrc {
