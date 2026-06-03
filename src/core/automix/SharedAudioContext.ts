@@ -25,6 +25,13 @@ export const getSharedAudioContext = (): IExtendedAudioContext => {
     sharedContext = new AudioContextClass({
       latencyHint: settingStore.audioLatencyHint,
     }) as IExtendedAudioContext;
+
+    // 切回页面时恢复 AudioContext（iOS Safari 切后台会挂起）
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && sharedContext?.state === "suspended") {
+        sharedContext.resume();
+      }
+    });
   }
   return sharedContext;
 };
