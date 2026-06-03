@@ -2,7 +2,7 @@
   <div class="home">
     <div v-if="settingStore.showHomeGreeting" class="welcome">
       <n-h1>{{ greetings }}</n-h1>
-      <n-text depth="3">{{ dailyQuote || '由此开启好心情 ~' }}</n-text>
+      <n-text depth="3">{{ dailyQuote || "由此开启好心情 ~" }}</n-text>
     </div>
     <!-- 在线模式 -->
     <HomeOnline v-if="settingStore.useOnlineService" />
@@ -29,13 +29,15 @@ const greetings = computed(() => {
 });
 
 // 每日一言
-const dailyQuote = ref('');
+const dailyQuote = ref("");
 onMounted(async () => {
   try {
-    const res = await fetch('/api/yiyan?code=json');
+    const res = await fetch("/api/yiyan?code=json");
     const data = await res.json();
     if (data.code === 200) dailyQuote.value = data.msg;
-  } catch { /* 静默失败，保留默认文案 */ }
+  } catch {
+    /* 静默失败，保留默认文案 */
+  }
 });
 </script>
 

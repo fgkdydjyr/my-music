@@ -54,6 +54,16 @@ const initAppServer = async () => {
         ],
       });
     });
+    // 每日一言（透传）
+    server.get("/api/yiyan", async (_request, reply) => {
+      try {
+        const res = await fetch("https://www.ffapi.cn/int/v1/yiyan?code=json");
+        const data: any = await res.json();
+        reply.send(data);
+      } catch {
+        reply.send({ code: 500, msg: "获取失败" });
+      }
+    });
     // 注册接口
     server.register(initNcmAPI, { prefix: "/api" });
     server.register(initUnblockAPI, { prefix: "/api" });
