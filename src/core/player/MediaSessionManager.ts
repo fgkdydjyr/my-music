@@ -315,6 +315,10 @@ class MediaSessionManager {
     if (this.shouldUseNativeMedia()) {
       sendMediaPlayState(isPlaying ? "Playing" : "Paused");
     }
+    // Web API：通知 iOS 锁屏显示音乐播放器布局（上一首/下一首）
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+    }
   }
 
   /**
