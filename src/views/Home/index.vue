@@ -32,7 +32,7 @@ const greetings = computed(() => {
 const dailyQuote = ref('');
 onMounted(async () => {
   try {
-    const res = await fetch('https://www.ffapi.cn/int/v1/yiyan?code=json');
+    const res = await fetch('/api/yiyan?code=json');
     const data = await res.json();
     if (data.code === 200) dailyQuote.value = data.msg;
   } catch { /* 静默失败，保留默认文案 */ }
