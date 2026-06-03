@@ -133,6 +133,7 @@ class MediaSessionManager {
     // Web API 初始化
     if ("mediaSession" in navigator) {
       const nav = navigator.mediaSession;
+      nav.playbackState = "playing";
       nav.setActionHandler("play", () => player.play());
       nav.setActionHandler("pause", () => player.pause());
       nav.setActionHandler("previoustrack", () => player.nextOrPrev("prev"));
@@ -140,6 +141,9 @@ class MediaSessionManager {
       nav.setActionHandler("seekto", (e) => {
         if (e.seekTime) player.setSeek(e.seekTime * 1000);
       });
+      // 清除默认的快进快退，让 iOS 显示上一首/下一首
+      nav.setActionHandler("seekforward", null);
+      nav.setActionHandler("seekbackward", null);
     }
   }
 
