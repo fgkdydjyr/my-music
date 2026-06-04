@@ -6,6 +6,7 @@ import {
 } from "./BaseAudioPlayer";
 import type { EngineCapabilities } from "./IPlaybackEngine";
 import { useSettingStore } from "@/stores";
+import { isElectron } from "@/utils/env";
 
 /**
  * 基于 HTMLAudioElement 的播放器实现
@@ -43,12 +44,21 @@ export class AudioElementPlayer extends BaseAudioPlayer {
     });
   }
 
+  /** iOS PWA 后台运行时 AudioContext 会被系统挂起，导致无声音输出 */
+  private get isIOSWeb(): boolean {
+    return !isElectron && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
   /**
    * 当音频图谱初始化完成时调用
    * 创建 MediaElementAudioSourceNode 并连接到输入节点
    */
   protected onGraphInitialized(): void {
     if (!this.audioCtx || !this.inputNode) return;
+
+    // iOS 上 AudioContext 后台会被挂起，不连接 Web Audio 图谱，
+    // 让 audio 元素直出扬声器以支持后台播放
+    if (this.isIOSWeb) return;
 
     try {
       if (!this.sourceNode) {
